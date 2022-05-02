@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <script defer src="https://unpkg.com/alpinejs@3.10.2/dist/cdn.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css">
+    <title>My Event</title>
+  </head>
+  <body>  
+ 
+  <script>
+    const myCount = <?!= JSON.stringify(count) ?>;
+  </script>
+    
+  
+    <div class = "container" x-data="{
+            count: myCount + 0, 
+            total: 15,
+            eventFull: false,
+            event: 'Event Registration',
+            inputMsg: '',
+            submitSuccess: false,
+            name: [],
+            submit(){
+                      if (this.name.length > 1){
+                        google.script.run.addRow(this.name);
+                        this.submitSuccess = true;
+                        this.inputMsg = '';
+                      }else{
+                        this.inputMsg = 'Please enter you name';
+                      }
+                    }
+    }">
+
+  <h2 x-text="event"></h2>
+
+  <hr>
+
+  <div x-show="!submitSuccess">
+    <h3 x-show="count<total">Available Seats: <span x-text="total-count"></span></h3>
+    <h3 x-show="count>=total">Sorry, all <span x-text="total"></span> seats have been reserved</h3>
+  </div>
+
+    <div class = "row" x-show="count<total">
+      <div x-if="!submitSuccess" class = "six columns">
+        <label for="nameInput">Enter Your Name</label>
+        <input type="text" x-model = "name" required value = "true"> 
+        <span class="checkmark"></span>
+      </div>
+    </div>
+      
+    <div class = "row" x-show="!submitSuccess">
+      <button @click="submit" class="button-primary">Register</button>
+    </div>
+  
+    <div x-html="inputMsg"></div>
+    
+    <div x-show="submitSuccess">
+    <p>
+      Thank you <span x-text="name"></span> for registering for <span x-text="event"></span>
+    </p>
+    </div>
+
+  </div>
+
+
+<style>
+input:invalid + span::after {
+  content: ' ❌';
+}
+input:valid+span::after {
+  content: ' ✓';
+  background-color: chartreuse;
+  font-weight: 800;
+}
+</style>
+    
+</body>
+</html>
